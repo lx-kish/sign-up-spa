@@ -8,7 +8,7 @@ import {
   useEffect,
 } from "react";
 
-import { useMessage } from "../contexts/MessageContext";
+import { useNotification } from "../contexts/NotificationContext";
 import { useRedirect } from "../contexts/RedirectContext";
 
 import FormInput from "./FormInput.component";
@@ -54,8 +54,7 @@ const errorMessages: IErrorMessages = {
 
 function Form(): ReactElement {
   // display message
-  const { setMessage, setMessType, setSecondsRemaining, setDisplay } =
-    useMessage();
+  const { setNotificationState } = useNotification();
 
   // redirect after submitting
   const { setRedirectState } = useRedirect();
@@ -131,10 +130,13 @@ function Form(): ReactElement {
     seconds: number,
     show: boolean
   ): void {
-    setMessType(type);
-    setMessage(text);
-    setSecondsRemaining(seconds);
-    setDisplay(show);
+    setNotificationState((prevState) => ({
+      ...prevState,
+      notification: text,
+      type: type,
+      secondsRemaining: seconds,
+      display: show,
+    }));
   }
 
   function validationRules(field: string, value: string): [boolean, string] {
@@ -150,6 +152,7 @@ function Form(): ReactElement {
       return [valid, errorMessage];
     }
 
+    // non-empty fields
     if (field === "email") {
       const expression =
         /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{1,1})+[^<>()\.,;:\s@\"]{2,})$/;

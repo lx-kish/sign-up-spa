@@ -1,15 +1,20 @@
 import { ReactElement } from "react";
 
-import { useMessage } from "../contexts/MessageContext";
+import { useNotification } from "../contexts/NotificationContext";
 
-import Message from "./Notification.component";
+import Notification from "./Notification.component";
 
 function Main({ children }: { children: ReactElement }): ReactElement {
-  const { message, messType, display } = useMessage();
+  const { notificationState } = useNotification();
 
   return (
     <main className="main">
-      {display && messType && <Message type={messType} message={message} />}
+      {notificationState.display && notificationState.type && (
+        <Notification
+          type={notificationState.type}
+          message={notificationState.notification}
+        />
+      )}
       {children}
     </main>
   );

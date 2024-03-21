@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { Routes, Route } from "react-router-dom";
 
-import { MessageProvider } from "./contexts/MessageContext";
+import { NotificationProvider } from "./contexts/NotificationContext";
 import { RedirectProvider } from "./contexts/RedirectContext";
 
 import HomePage from "./pages/Home.page";
@@ -14,7 +14,7 @@ function App(): ReactElement {
   return (
     <>
       <RedirectProvider>
-        <MessageProvider>
+        <NotificationProvider>
           <div>
             <Header />
             <Main>
@@ -25,7 +25,7 @@ function App(): ReactElement {
             </Main>
             <Footer />
           </div>
-        </MessageProvider>
+        </NotificationProvider>
       </RedirectProvider>
     </>
   );
