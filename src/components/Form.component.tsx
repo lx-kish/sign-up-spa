@@ -18,6 +18,7 @@ import {
   timeouts,
   submitStatus,
   notificationTypes,
+  routes,
 } from "../constants/constants";
 
 import { TSubmitStatus, TNotificationType } from "../types/types";
@@ -83,7 +84,7 @@ function Form(): ReactElement {
   useEffect(
     function () {
       if (status === submitStatus.fulfilled) {
-        setRedirectState({ redirect: true, destination: "/" });
+        setRedirectState({ redirect: true, destination: routes.home });
       }
     },
     [status]

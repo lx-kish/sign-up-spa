@@ -14,3 +14,9 @@ export const notificationTypes = {
   success: "success",
   none: "",
 } as const;
+
+export const routes = {
+  home: "/sign-up-spa",
+  signUp: "/sign-up-spa/sign-up",
+  none: "",
+} as const;

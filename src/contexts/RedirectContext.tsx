@@ -9,9 +9,12 @@ import {
 } from "react";
 import { useNavigate, To } from "react-router-dom";
 
+import { routes } from "../constants/constants";
+import { TRoutes } from "../types/types";
+
 interface IRedirectState {
   redirect: boolean;
-  destination: string | number;
+  destination: TRoutes | number;
 }
 
 interface IRedirectContextProp {
@@ -32,12 +35,12 @@ function RedirectProvider({ children }: IProps): ReactElement {
 
   const [redirectState, setRedirectState] = useState<IRedirectState>({
     redirect: false,
-    destination: "",
+    destination: routes.home,
   });
 
   useEffect(
     function () {
-      if (redirectState.redirect && redirectState.destination != "") {
+      if (redirectState.redirect && redirectState.destination !== routes.none) {
         navigate(redirectState.destination as To);
         setRedirectState({
           ...redirectState,
