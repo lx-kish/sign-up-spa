@@ -1,0 +1,55 @@
+.header {
+  margin: 0 auto;
+  max-width: $app-max-width;
+}
+
+.main {
+  margin: 0 auto;
+  width: 100%;
+  max-width: $app-max-width;
+  font-size: $page-font-size-main;
+  color: var(--color-white);
+}
+
+.content {
+  margin: 10rem auto;
+  text-align: center;
+  width: 100%;
+  max-width: $app-max-width;
+  font-size: $page-font-size-main;
+}
+
+.footer {
+  font-size: $footer-font-size-main;
+  margin: 0 auto;
+  text-align: center;
+  left: 0;
+  bottom: 0;
+  color: var(--color-white);
+  position: fixed;
+  width: 100%;
+}
+
+.message {
+  position: fixed;
+  width: 62rem;
+  top: 5%;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  z-index: 99999;
+  color: var(--color-white);
+  font-size: $alert-message-font-size;
+  border-radius: 5px;
+  padding: 1.6rem 3rem;
+  -webkit-box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.25);
+
+  &--success {
+    background-color: var(--color-green);
+  }
+
+  &--error {
+    background-color: var(--color-red);
+  }
+}

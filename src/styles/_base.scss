@@ -1,0 +1,79 @@
+@import "https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap";
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+:root {
+  ////////////////////////////////////////////////
+  // COLORS
+
+  --color-primary-dark: #{$color-primary-dark};
+
+  --color-primary-dark-90: #{$color-primary-dark-90};
+
+  --color-primary-light-90: #{$color-primary-light-90};
+
+  --color-btn-back: #{$color-btn-back};
+
+  --color-btn-submit: #{$color-btn-submit};
+
+  //RED
+  --color-red: #{$color-red};
+
+  //GREEN
+  --color-green: #{$color-green};
+
+  //BLACK
+  --color-black: #{$color-black};
+
+  --color-black-80: #{$color-black-80};
+
+  //WHITE
+  --color-white: #{$color-white};
+}
+
+html {
+  //defines how many px is 1rem
+  font-size: 62.5%; //1rem = 10px (10px/16px = 62.5%)
+
+  // font-family: 'Orbitron', sans-serif;
+  font-family: "Manrope";
+
+  //for correct calculations rem units in Safari
+  -webkit-text-size-adjust: none;
+}
+
+body {
+  box-sizing: border-box;
+}
+
+////////////////////////////////////////////////
+//COMPATIBILITY WITH NON-HTML5 BROWSERS
+footer,
+header,
+nav,
+section {
+  display: block;
+  max-width: $app-max-width;
+}
+
+/*
+ * For putting footer to the bottom of the page despite of the height of content 
+ */
+#root {
+  overflow: hidden; //to prevent internal elements brake the design if they oversized 'page' container
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; //to make height of the page 100% of viewport
+
+  background-image: linear-gradient(
+    to right bottom,
+    var(--color-primary-dark-90),
+    var(--color-primary-light-90)
+  );
+}

@@ -3,6 +3,7 @@ import { defineConfig as defineVitestConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 
 const viteConfig = defineViteConfig({
+  base: "/sign-up-spa",
   plugins: [react()],
 });
 

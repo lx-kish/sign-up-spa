@@ -1,0 +1,24 @@
+.navigation {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  max-width: $app-max-width;
+  height: 4rem;
+
+  &__menu {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  &__btn:link,
+  &__btn:visited {
+    text-decoration: none;
+    color: var(--color-white);
+    text-transform: uppercase;
+    font-size: $navigation-font-size;
+    font-weight: 600;
+    padding: 1rem;
+  }
+}

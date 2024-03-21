@@ -1,0 +1,91 @@
+// trick to override default chrome change styling of input fields
+// src: https://css-tricks.com/snippets/css/change-autocomplete-styles-webkit-browsers/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-black);
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-white) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.form {
+  margin: 10rem auto;
+  max-width: 50rem;
+  width: 100%;
+  padding: 1rem 3rem 3rem;
+  background-color: var(--color-white);
+  border-radius: 0.5rem;
+
+  &__header {
+    text-align: center;
+    color: var(--color-black-80);
+  }
+
+  &__disclamer {
+    text-align: center;
+    font-size: $form-label-font-size;
+    color: var(--color-black-80);
+    margin-bottom: 1rem;
+  }
+
+  &__btn-container {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: right;
+    gap: 3rem;
+  }
+
+  &-input {
+    &__field {
+      padding: 1rem;
+      font-size: $form-input-font-size;
+      border-radius: 0.5rem;
+      border: 0.2rem solid var(--color-primary-dark);
+
+      &:focus {
+        outline-color: var(--color-primary-dark);
+      }
+
+      &:invalid,
+      &:valid {
+        background-color: var(--color-white);
+      }
+
+      &--error {
+        border: 0.2rem solid var(--color-red) !important;
+      }
+    }
+
+    &__container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &__label {
+      font-size: $form-label-font-size;
+      padding: 0.5rem 0;
+      color: var(--color-black);
+    }
+
+    &__error-message {
+      font-size: $form-message-font-size;
+      padding: 0.3rem 0;
+      color: var(--color-red);
+      display: none;
+
+      &--error {
+        display: block;
+      }
+
+      &-container {
+        height: 3rem;
+      }
+    }
+  }
+}
