@@ -4,11 +4,12 @@ import { userEvent } from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import "@testing-library/jest-dom";
 import App from "../App";
+import { routes } from "../constants/constants";
 
 describe("NO error displayed for the VALID User email input", () => {
   beforeEach(() => {
     render(
-      <MemoryRouter initialEntries={["/sign-up-spa/sign-up"]}>
+      <MemoryRouter initialEntries={[routes.signUp]}>
         <App />
       </MemoryRouter>
     );
@@ -229,7 +230,7 @@ describe("NO error displayed for the VALID User email input", () => {
 describe("ERROR displayed for the INVALID User email input", () => {
   beforeEach(() => {
     render(
-      <MemoryRouter initialEntries={["/sign-up-spa/sign-up"]}>
+      <MemoryRouter initialEntries={[routes.signUp]}>
         <App />
       </MemoryRouter>
     );
@@ -394,7 +395,7 @@ describe("ERROR displayed for the INVALID User email input", () => {
 describe("NO error displayed for the VALID User password input", () => {
   beforeEach(() => {
     render(
-      <MemoryRouter initialEntries={["/sign-up-spa/sign-up"]}>
+      <MemoryRouter initialEntries={[routes.signUp]}>
         <App />
       </MemoryRouter>
     );
@@ -440,7 +441,7 @@ describe("NO error displayed for the VALID User password input", () => {
 describe("ERROR displayed for the INVALID User password input", () => {
   beforeEach(() => {
     render(
-      <MemoryRouter initialEntries={["/sign-up-spa/sign-up"]}>
+      <MemoryRouter initialEntries={[routes.signUp]}>
         <App />
       </MemoryRouter>
     );
@@ -520,7 +521,7 @@ describe("ERROR displayed for the INVALID User password input", () => {
 describe("confirmPassword input field matching password input field", () => {
   beforeEach(() => {
     render(
-      <MemoryRouter initialEntries={["/sign-up-spa/sign-up"]}>
+      <MemoryRouter initialEntries={[routes.signUp]}>
         <App />
       </MemoryRouter>
     );

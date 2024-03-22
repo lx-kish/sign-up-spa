@@ -9,6 +9,7 @@ import SignUp from "./pages/SignUp.page";
 import Header from "./components/Header.component";
 import Footer from "./components/Footer.component";
 import Main from "./components/Main.component";
+import { routes } from "./constants/constants";
 
 function App(): ReactElement {
   return (
@@ -19,8 +20,8 @@ function App(): ReactElement {
             <Header />
             <Main>
               <Routes>
-                <Route path="/sign-up-spa" element={<HomePage />} />
-                <Route path="/sign-up-spa/sign-up" element={<SignUp />} />
+                <Route path={routes.home} element={<HomePage />} />
+                <Route path={routes.signUp} element={<SignUp />} />
               </Routes>
             </Main>
             <Footer />

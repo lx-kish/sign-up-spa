@@ -2,12 +2,14 @@ import { describe, test, expect } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import "@testing-library/jest-dom";
+
 import App from "../App";
+import { navigationLinks, routes } from "../constants/constants";
 
 describe("Home Page appearance test set", () => {
   beforeEach(() => {
     render(
-      <MemoryRouter initialEntries={["/sign-up-spa"]}>
+      <MemoryRouter initialEntries={[routes.home]}>
         <App />
       </MemoryRouter>
     );
@@ -24,12 +26,12 @@ describe("Home Page appearance test set", () => {
     const links: HTMLAnchorElement[] = screen.getAllByRole("link");
 
     expect(links[0]).toBeInTheDocument();
-    expect(links[0].textContent).toEqual("Home");
-    expect(links[0].href).toContain("/");
+    expect(links[0].textContent).toEqual(navigationLinks.home);
+    expect(links[0].href).toContain(routes.home);
 
     expect(links[1]).toBeInTheDocument();
-    expect(links[1].textContent).toEqual("Sign Up");
-    expect(links[1].href).toContain("/sign-up");
+    expect(links[1].textContent).toEqual(navigationLinks.signUp);
+    expect(links[1].href).toContain(routes.signUp);
   });
 
   test("navigates to Home page, the main content is in the page", () => {
@@ -49,7 +51,7 @@ describe("Home Page appearance test set", () => {
 describe("Sign Up Page appearance test set", () => {
   beforeEach(() => {
     render(
-      <MemoryRouter initialEntries={["/sign-up-spa/sign-up"]}>
+      <MemoryRouter initialEntries={[routes.signUp]}>
         <App />
       </MemoryRouter>
     );
@@ -63,15 +65,17 @@ describe("Sign Up Page appearance test set", () => {
   });
 
   test("Header with navigation link to '/' and '/sign-up' are in the page", () => {
-    const navigationElement = screen.getByRole("link", { name: "Sign Up" });
+    const navigationElement = screen.getByRole("link", {
+      name: navigationLinks.signUp,
+    });
     expect(navigationElement).toBeInTheDocument();
     const links: HTMLAnchorElement[] = screen.getAllByRole("link");
 
-    expect(links[0].textContent).toEqual("Home");
-    expect(links[0].href).toContain("/");
+    expect(links[0].textContent).toEqual(navigationLinks.home);
+    expect(links[0].href).toContain(routes.home);
 
-    expect(links[1].textContent).toEqual("Sign Up");
-    expect(links[1].href).toContain("/sign-up-spa/sign-up");
+    expect(links[1].textContent).toEqual(navigationLinks.signUp);
+    expect(links[1].href).toContain(routes.signUp);
   });
 
   test("Register form is in the page", () => {

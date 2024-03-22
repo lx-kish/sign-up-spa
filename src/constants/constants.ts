@@ -20,3 +20,8 @@ export const routes = {
   signUp: "/sign-up-spa/sign-up",
   none: "",
 } as const;
+
+export const navigationLinks = {
+  home: "Home",
+  signUp: "Sign Up",
+} as const;

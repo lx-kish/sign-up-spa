@@ -5,45 +5,55 @@ import { MemoryRouter } from "react-router-dom";
 import "@testing-library/jest-dom";
 
 import App from "../App";
+import { navigationLinks, routes } from "../constants/constants";
 
 describe("Navigation test set", () => {
   afterEach(cleanup);
 
   test("redirect from Home page to Sign Up page when navigation link is pressed", async () => {
     render(
-      <MemoryRouter initialEntries={["/sign-up-spa"]}>
+      <MemoryRouter initialEntries={[routes.home]}>
         <App />
       </MemoryRouter>
     );
 
     const user = userEvent.setup();
 
-    const linkToSignUpPage = screen.getByRole("link", { name: "Sign Up" });
+    const linkToSignUpPage = screen.getByRole("link", {
+      name: navigationLinks.signUp,
+    });
     expect(linkToSignUpPage).toBeInTheDocument();
 
-    expect(window.location.pathname).toBe("/");
+    expect(
+      screen.getByText(
+        /This application is a PoC to demonstrate React development skills/i
+      )
+    ).toBeInTheDocument();
 
     await user.click(linkToSignUpPage);
 
-    expect(window.location.pathname).toBe("/sign-up-spa/sign-up");
+    expect(window.location.pathname).toBe(routes.signUp);
   });
 
   test("redirect from Sign Up page to Home page when navigation link is pressed", async () => {
     render(
-      <MemoryRouter initialEntries={["/sign-up-spa/sign-up"]}>
+      <MemoryRouter initialEntries={[routes.signUp]}>
         <App />
       </MemoryRouter>
     );
 
     const user = userEvent.setup();
 
-    const linkToHomePage = screen.getByRole("link", { name: "Home" });
+    const linkToHomePage = screen.getByRole("link", {
+      name: navigationLinks.home,
+    });
     expect(linkToHomePage).toBeInTheDocument();
 
-    expect(window.location.pathname).toBe("/sign-up-spa/sign-up");
+    expect(screen.getByText(/Register form/i)).toBeInTheDocument();
 
     await user.click(linkToHomePage);
 
-    expect(window.location.pathname).toBe("/sign-up-spa");
+    console.log(window.location.pathname);
+    expect(window.location.pathname).toBe(routes.home);
   });
 });
