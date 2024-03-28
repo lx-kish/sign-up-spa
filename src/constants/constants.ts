@@ -1,6 +1,6 @@
 export const timeouts = {
-  SUCCESS_MESSAGE_TIMEOUT: 7,
-  ERROR_MESSAGE_TIMEOUT: 5,
+  success: 7,
+  error: 5,
 } as const;
 
 export const submitStatus = {
