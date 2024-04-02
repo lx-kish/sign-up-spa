@@ -90,61 +90,6 @@ function Form(): ReactElement {
     [status]
   );
 
-  // submitting form
-  useEffect(
-    function () {
-      if (status === submitStatus.pending) {
-        let formStatus: TSubmitStatus = submitStatus.pending;
-
-        const validationErrors: any = {};
-        Object.entries(formValues).map(([key, value]) => {
-          const [valid, errorMessage] = validationRules(key, value);
-
-          validationErrors[`${key}`] = valid;
-          validationErrors[`${key}Error`] = errorMessage;
-
-          if (!valid) {
-            formStatus = submitStatus.rejected;
-          }
-          if (valid) {
-            formStatus = submitStatus.fulfilled;
-          }
-        });
-
-        setFieldsValidation((prevState) => ({
-          ...prevState,
-          ...validationErrors,
-        }));
-
-        if ((formStatus as TSubmitStatus) === submitStatus.rejected) {
-          setNotificationState((prevState) => ({
-            ...prevState,
-            notification: `Please correct fields pointing with error messages!`,
-            type: notificationTypes.error,
-            secondsRemaining: timeouts.error,
-            display: true,
-          }));
-          setStatus(submitStatus.rejected);
-        }
-
-        if ((formStatus as TSubmitStatus) === submitStatus.fulfilled) {
-          // Form data for submitting:
-          setNotificationState((prevState) => ({
-            ...prevState,
-            notification: `Form has been successfully submitted! Form data is ready to be sent to the server now:
-            email: ${formValues.email}
-            password: ${formValues.password}`,
-            type: notificationTypes.success,
-            secondsRemaining: timeouts.success,
-            display: true,
-          }));
-          setStatus(submitStatus.fulfilled);
-        }
-      }
-    },
-    [status]
-  );
-
   function validationRules(field: string, value: string): [boolean, string] {
     let valid = true;
     let errorMessage = "";
@@ -194,6 +139,53 @@ function Form(): ReactElement {
 
     // set form Sign Up button disabled, submit handler is located in useEffect hook
     setStatus(submitStatus.pending);
+
+    let formStatus: TSubmitStatus = submitStatus.pending;
+
+    const validationErrors: any = {};
+    Object.entries(formValues).map(([key, value]) => {
+      const [valid, errorMessage] = validationRules(key, value);
+
+      validationErrors[`${key}`] = valid;
+      validationErrors[`${key}Error`] = errorMessage;
+
+      if (!valid) {
+        formStatus = submitStatus.rejected;
+      }
+      if (valid) {
+        formStatus = submitStatus.fulfilled;
+      }
+    });
+
+    setFieldsValidation((prevState) => ({
+      ...prevState,
+      ...validationErrors,
+    }));
+
+    if ((formStatus as TSubmitStatus) === submitStatus.rejected) {
+      setNotificationState((prevState) => ({
+        ...prevState,
+        notification: `Please correct fields pointing with error messages!`,
+        type: notificationTypes.error,
+        secondsRemaining: timeouts.error,
+        display: true,
+      }));
+      setStatus(submitStatus.rejected);
+    }
+
+    if ((formStatus as TSubmitStatus) === submitStatus.fulfilled) {
+      // Form data for submitting:
+      setNotificationState((prevState) => ({
+        ...prevState,
+        notification: `Form has been successfully submitted! Form data is ready to be sent to the server now:
+            email: ${formValues.email}
+            password: ${formValues.password}`,
+        type: notificationTypes.success,
+        secondsRemaining: timeouts.success,
+        display: true,
+      }));
+      setStatus(submitStatus.fulfilled);
+    }
   }
 
   function onChange(e: ChangeEvent<HTMLInputElement>) {
