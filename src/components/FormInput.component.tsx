@@ -1,4 +1,4 @@
-import { ReactElement, ChangeEvent, FocusEvent } from "react";
+import { ReactElement, ChangeEvent, FocusEvent, memo } from "react";
 
 interface IProps {
   id: string;
@@ -60,4 +60,4 @@ function FormInput({
   );
 }
 
-export default FormInput;
+export default memo(FormInput);

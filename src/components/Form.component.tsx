@@ -5,7 +5,7 @@ import {
   ChangeEvent,
   FocusEvent,
   FormEvent,
-  useEffect,
+  useCallback,
 } from "react";
 
 import { useNotification } from "../contexts/NotificationContext";
@@ -80,17 +80,7 @@ function Form(): ReactElement {
 
   const [status, setStatus] = useState<TSubmitStatus>(submitStatus.rejected);
 
-  // redirect after submit fulfilled
-  useEffect(
-    function () {
-      if (status === submitStatus.fulfilled) {
-        setRedirectState({ redirect: true, destination: routes.home });
-      }
-    },
-    [status]
-  );
-
-  function validationRules(field: string, value: string): [boolean, string] {
+  function isFieldValid(field: string, value: string): [boolean, string] {
     let valid = true;
     let errorMessage = "";
 
@@ -129,10 +119,9 @@ function Form(): ReactElement {
     return [valid, errorMessage];
   }
 
-  function handleBtnBack(e: SyntheticEvent<Element, Event>) {
-    e.preventDefault();
+  const handleBtnBack = useCallback(function handleBtnBack() {
     setRedirectState({ redirect: true, destination: -1 });
-  }
+  }, []);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -140,20 +129,17 @@ function Form(): ReactElement {
     // set form Sign Up button disabled, submit handler is located in useEffect hook
     setStatus(submitStatus.pending);
 
-    let formStatus: TSubmitStatus = submitStatus.pending;
+    let formStatus = true;
 
     const validationErrors: any = {};
     Object.entries(formValues).map(([key, value]) => {
-      const [valid, errorMessage] = validationRules(key, value);
+      const [valid, errorMessage] = isFieldValid(key, value);
 
       validationErrors[`${key}`] = valid;
       validationErrors[`${key}Error`] = errorMessage;
 
       if (!valid) {
-        formStatus = submitStatus.rejected;
-      }
-      if (valid) {
-        formStatus = submitStatus.fulfilled;
+        formStatus = false;
       }
     });
 
@@ -162,7 +148,7 @@ function Form(): ReactElement {
       ...validationErrors,
     }));
 
-    if ((formStatus as TSubmitStatus) === submitStatus.rejected) {
+    if (!formStatus) {
       setNotificationState((prevState) => ({
         ...prevState,
         notification: `Please correct fields pointing with error messages!`,
@@ -173,7 +159,7 @@ function Form(): ReactElement {
       setStatus(submitStatus.rejected);
     }
 
-    if ((formStatus as TSubmitStatus) === submitStatus.fulfilled) {
+    if (formStatus) {
       // Form data for submitting:
       setNotificationState((prevState) => ({
         ...prevState,
@@ -185,25 +171,29 @@ function Form(): ReactElement {
         display: true,
       }));
       setStatus(submitStatus.fulfilled);
+      setRedirectState({ redirect: true, destination: routes.home });
     }
   }
 
-  function onChange(e: ChangeEvent<HTMLInputElement>) {
+  const onChange = useCallback(function onChange(
+    e: ChangeEvent<HTMLInputElement>
+  ) {
     setFormValues((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
-  }
+  },
+  []);
 
-  function onBlur(e: FocusEvent<HTMLInputElement>) {
-    const [valid, error] = validationRules(e.target.name, e.target.value);
+  const onBlur = useCallback(function onBlur(e: FocusEvent<HTMLInputElement>) {
+    const [valid, error] = isFieldValid(e.target.name, e.target.value);
 
     setFieldsValidation((prevState) => ({
       ...prevState,
       [e.target.name]: valid,
       [`${e.target.name}Error`]: error,
     }));
-  }
+  }, []);
 
   const inputs: {
     id: string;
@@ -271,7 +261,7 @@ function Form(): ReactElement {
       <div className="form__btn-container">
         <Button
           data-testid={`btn-back`}
-          onClick={(e) => handleBtnBack(e)}
+          onClick={handleBtnBack}
           btnClassName="btn btn-back"
         >
           &larr; Back

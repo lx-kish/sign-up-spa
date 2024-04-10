@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, SyntheticEvent } from "react";
+import { ReactElement, ReactNode, SyntheticEvent, memo } from "react";
 
 interface IProps {
   type?: "button" | "submit" | "reset" | undefined;
@@ -27,4 +27,4 @@ function Button({
   );
 }
 
-export default Button;
+export default memo(Button);

@@ -13,5 +13,9 @@
   &-submit {
     background-color: var(--color-btn-submit);
     color: var(--color-white);
+
+    &:disabled {
+      background-color: var(--color-btn-submit-disabled);
+    }
   }
 }
