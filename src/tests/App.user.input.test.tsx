@@ -218,3 +218,50 @@ testDataSet.forEach((dataset): void => {
     });
   });
 });
+
+test.only("validate when submit", async () => {
+  render(
+    <MemoryRouter initialEntries={[routes.signUp]}>
+      <App />
+    </MemoryRouter>
+  );
+
+  const user = userEvent.setup();
+
+  const password = "A123123$a";
+  const paswordInput = screen.getByLabelText("Please provide a password *");
+  const confirmInput = screen.getByLabelText("Please confirm the password *");
+
+  await user.type(paswordInput, password);
+  await user.type(confirmInput, password);
+  await user.click(screen.getByRole("button", { name: "Sign Up" }));
+
+  expect(screen.getByText("Email field cannot be empty!")).toBeInTheDocument();
+});
+
+test.only("display message while submitting the form", async () => {
+  render(
+    <MemoryRouter initialEntries={[routes.signUp]}>
+      <App />
+    </MemoryRouter>
+  );
+
+  const user = userEvent.setup();
+
+  const email = "test@test.test";
+  const password = "A123123$a";
+  const emailInput = screen.getByLabelText(
+    "Please provide a valid email address *"
+  );
+  const paswordInput = screen.getByLabelText("Please provide a password *");
+  const confirmInput = screen.getByLabelText("Please confirm the password *");
+
+  await user.type(emailInput, email);
+  await user.type(paswordInput, password);
+  await user.type(confirmInput, password);
+  await user.click(screen.getByRole("button", { name: "Sign Up" }));
+
+  expect(
+    screen.getByText("Submitting data to the server...")
+  ).toBeInTheDocument();
+});

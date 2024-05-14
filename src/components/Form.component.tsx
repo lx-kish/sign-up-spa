@@ -14,11 +14,14 @@ import { useRedirect } from "../contexts/RedirectContext";
 import FormInput from "./FormInput.component";
 import Button from "./Button.component";
 
+import { apiClient } from "../api/apiCalls";
+
 import {
   timeouts,
   submitStatus,
   notificationTypes,
   routes,
+  formFieldExpressions,
 } from "../constants/constants";
 
 import { TSubmitStatus } from "../types/types";
@@ -80,50 +83,66 @@ function Form(): ReactElement {
 
   const [status, setStatus] = useState<TSubmitStatus>(submitStatus.rejected);
 
-  function isFieldValid(field: string, value: string): [boolean, string] {
-    let valid = true;
-    let errorMessage = "";
+  const inputs: {
+    id: string;
+    name: string;
+    type: string;
+    placeholder: string;
+    label: string;
+    required?: boolean;
+    isValid: () => [boolean, string];
+  }[] = [
+    {
+      id: "email",
+      name: "email",
+      type: "email",
+      placeholder: "Enter a valid email",
+      label: "Please provide a valid email address",
+      isValid: () => {
+        if (isEmpty("email")) return [false, errorMessages.email.empty];
 
-    // empty field
-    if (value === "") {
-      valid = false;
-      errorMessage = errorMessages[field as keyof IErrorMessages]
-        .empty as string;
+        const valid = formFieldExpressions.email.test(formValues.email);
+        return [valid, valid ? "" : errorMessages.email.notEmpty];
+      },
+    },
+    {
+      id: "password",
+      name: "password",
+      type: "password",
+      placeholder: "Enter a password",
+      label: "Please provide a password",
+      isValid: () => {
+        if (isEmpty("password")) return [false, errorMessages.password.empty];
 
-      return [valid, errorMessage];
-    }
+        const valid = formFieldExpressions.password.test(formValues.password);
+        return [valid, valid ? "" : errorMessages.password.notEmpty];
+      },
+    },
+    {
+      id: "confirmPassword",
+      name: "confirmPassword",
+      type: "password",
+      placeholder: "Confirm the password",
+      label: "Please confirm the password",
+      isValid: () => {
+        if (isEmpty("confirmPassword"))
+          return [false, errorMessages.confirmPassword.empty];
 
-    // non-empty fields
-    if (field === "email") {
-      const expression =
-        /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{1,1})+[^<>()\.,;:\s@\"]{2,})$/;
+        const valid = formValues.password === formValues.confirmPassword;
+        return [valid, valid ? "" : errorMessages.confirmPassword.notEmpty];
+      },
+    },
+  ];
 
-      valid = expression.test(value);
-    }
-
-    if (field === "password") {
-      const expression =
-        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?([^\w\s]|[_])).{8,}$/;
-
-      valid = expression.test(value);
-    }
-
-    if (field === "confirmPassword") {
-      valid = formValues.password === formValues.confirmPassword;
-    }
-
-    errorMessage = valid
-      ? ""
-      : (errorMessages[field as keyof IErrorMessages].notEmpty as string);
-
-    return [valid, errorMessage];
+  function isEmpty(field: string): boolean {
+    return formValues[field] === "";
   }
 
   const handleBtnBack = useCallback(function handleBtnBack() {
     setRedirectState({ redirect: true, destination: -1 });
   }, []);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     // set form Sign Up button disabled, submit handler is located in useEffect hook
@@ -132,8 +151,10 @@ function Form(): ReactElement {
     let formStatus = true;
 
     const validationErrors: any = {};
-    Object.entries(formValues).map(([key, value]) => {
-      const [valid, errorMessage] = isFieldValid(key, value);
+    Object.entries(formValues).map(([key]) => {
+      const input = inputs.find((field) => field.name === key);
+
+      const [valid, errorMessage] = input!.isValid();
 
       validationErrors[`${key}`] = valid;
       validationErrors[`${key}Error`] = errorMessage;
@@ -163,6 +184,19 @@ function Form(): ReactElement {
       // Form data for submitting:
       setNotificationState((prevState) => ({
         ...prevState,
+        notification: `Submitting data to the server...`,
+        type: notificationTypes.pending,
+        secondsRemaining: timeouts.pending,
+        display: true,
+      }));
+
+      const { result } = await apiClient.signUp({
+        email: formValues.email,
+        password: formValues.password,
+      });
+
+      setNotificationState((prevState) => ({
+        ...prevState,
         notification: `Form has been successfully submitted! Form data is ready to be sent to the server now:
             email: ${formValues.email}
             password: ${formValues.password}`,
@@ -170,61 +204,30 @@ function Form(): ReactElement {
         secondsRemaining: timeouts.success,
         display: true,
       }));
+
       setStatus(submitStatus.fulfilled);
       setRedirectState({ redirect: true, destination: routes.home });
     }
   }
 
-  const onChange = useCallback(function onChange(
-    e: ChangeEvent<HTMLInputElement>
-  ) {
+  function onChange(e: ChangeEvent<HTMLInputElement>) {
     setFormValues((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
-  },
-  []);
+  }
 
-  const onBlur = useCallback(function onBlur(e: FocusEvent<HTMLInputElement>) {
-    const [valid, error] = isFieldValid(e.target.name, e.target.value);
+  function onBlur(e: FocusEvent<HTMLInputElement>) {
+    const input = inputs.find((field) => field.name === e.target.name);
+
+    const [valid, errorMessage] = input!.isValid();
 
     setFieldsValidation((prevState) => ({
       ...prevState,
       [e.target.name]: valid,
-      [`${e.target.name}Error`]: error,
+      [`${e.target.name}Error`]: errorMessage,
     }));
-  }, []);
-
-  const inputs: {
-    id: string;
-    name: string;
-    type: string;
-    placeholder: string;
-    label: string;
-    required?: boolean;
-  }[] = [
-    {
-      id: "email",
-      name: "email",
-      type: "email",
-      placeholder: "Enter a valid email",
-      label: "Please provide a valid email address",
-    },
-    {
-      id: "password",
-      name: "password",
-      type: "password",
-      placeholder: "Enter a password",
-      label: "Please provide a password",
-    },
-    {
-      id: "confirmPassword",
-      name: "confirmPassword",
-      type: "password",
-      placeholder: "Confirm the password",
-      label: "Please confirm the password",
-    },
-  ];
+  }
 
   return (
     <form
@@ -239,24 +242,26 @@ function Form(): ReactElement {
         real passwords or any other sensitive data on this page!
         <span>⚠️</span>
       </p>
-      {inputs.map((input) => (
-        <FormInput
-          key={input.id}
-          {...input}
-          value={formValues[input.id]}
-          onChange={onChange}
-          onBlur={onBlur}
-          inputClass={
-            fieldsValidation[input.id] ? "" : " form-input__field--error"
-          }
-          errorMessage={fieldsValidation[`${input.id}Error`] as string}
-          errorMessageClass={
-            fieldsValidation[input.id]
-              ? ""
-              : " form-input__error-message--error"
-          }
-        />
-      ))}
+      <div className="form__fields">
+        {inputs.map((input) => (
+          <FormInput
+            key={input.id}
+            {...input}
+            value={formValues[input.id]}
+            onChange={onChange}
+            onBlur={onBlur}
+            inputClass={
+              fieldsValidation[input.id] ? "" : " form-input__field--error"
+            }
+            errorMessage={fieldsValidation[`${input.id}Error`] as string}
+            errorMessageClass={
+              fieldsValidation[input.id]
+                ? ""
+                : " form-input__error-message--error"
+            }
+          />
+        ))}
+      </div>
 
       <div className="form__btn-container">
         <Button

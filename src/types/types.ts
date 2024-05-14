@@ -3,6 +3,7 @@ import {
   submitStatus,
   routes,
   navigationLinks,
+  formFieldExpressions,
 } from "../constants/constants";
 
 export type TNotificationType =
@@ -14,3 +15,6 @@ export type TRoutes = (typeof routes)[keyof typeof routes];
 
 export type TNavigationLinks =
   (typeof navigationLinks)[keyof typeof navigationLinks];
+
+export type TFormFieldExpressions =
+  (typeof formFieldExpressions)[keyof typeof formFieldExpressions];

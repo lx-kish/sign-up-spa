@@ -67,7 +67,7 @@ function RedirectProvider({ children }: IProps): ReactElement {
 function useRedirect() {
   const context = useContext(RedirectContext);
   if (context === undefined)
-    throw new Error("RedirectContext was used outside the MessageProvider");
+    throw new Error("RedirectContext was used outside the RedirectProvider");
   return context;
 }
 

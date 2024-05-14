@@ -16,7 +16,7 @@ select:-webkit-autofill:focus {
 
 .form {
   margin: 10rem auto;
-  max-width: 50rem;
+  max-width: 90rem;
   width: 100%;
   padding: 1rem 3rem 3rem;
   background-color: var(--color-white);
@@ -34,6 +34,12 @@ select:-webkit-autofill:focus {
     margin-bottom: 1rem;
   }
 
+  &__fields {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+  }
+
   &__btn-container {
     margin-top: 2rem;
     display: flex;
@@ -45,6 +51,7 @@ select:-webkit-autofill:focus {
     &__field {
       padding: 1rem;
       font-size: $form-input-font-size;
+      flex-grow: 1;
       border-radius: 0.5rem;
       border: 0.2rem solid var(--color-primary-dark);
 
@@ -65,6 +72,8 @@ select:-webkit-autofill:focus {
     &__container {
       display: flex;
       flex-direction: column;
+      flex: 1 0 0;
+      justify-content: flex-end;
     }
 
     &__label {
@@ -84,7 +93,7 @@ select:-webkit-autofill:focus {
       }
 
       &-container {
-        height: 3rem;
+        height: 5rem;
       }
     }
   }
